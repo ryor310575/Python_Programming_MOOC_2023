@@ -56,21 +56,32 @@ def write_entry(current_file:str,entry:str)->bool:
 #*******************************************************
 def operation_test(line_to_test:str)->bool:
     test_flag=False
-    line_to_test=line_to_test.stripe()
+    line_to_test=line_to_test.strip()
     parts = line_to_test.split(';')
-    result=parts[2]
+    result=int(parts[2])
     operation=parts[1]
-    print(operation)
     if '+' in operation:
-        
+        suma=operation.split("+")
+        test=int(suma[0])+int(suma[1])
+        if test == result:
+            test_flag=True
+    elif '-' in operation:
+        resta=operation.split("-")
+        test=int(resta[0])-int(resta[1])
+        if test == result:
+            test_flag=True
     return test_flag
+def filter_solutions():
+    open('incorrect.csv', 'w').close()
+    open('correct.csv', 'w').close()
+    with open("solutions.csv") as solutions_file:
+        for line in solutions_file:
+            line=line.strip()
+            if operation_test(line.strip()):
+                receive_flag=write_entry('correct.csv',line)
+            else:
+                receive_flag=write_entry('incorrect.csv',line)
 
 
-
-    def main():
-        # open('incorrect.csv', 'w').close()
-        # open('correct.csv', 'w').close()
-        operation_test("Kirka;79-15;22")
-
-
-    main()
+if __name__ == "__main__":
+    filter_solutions()
