@@ -72,6 +72,7 @@ def operation_test(line_to_test:str)->bool:
             test_flag=True
     return test_flag
 def filter_solutions():
+    #*** Clean de flter files ***
     open('incorrect.csv', 'w').close()
     open('correct.csv', 'w').close()
     with open("solutions.csv") as solutions_file:

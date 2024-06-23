@@ -1,5 +1,5 @@
 # tee ratkaisu tänne
-#*******************************************************
+#******************** FUNCTION *************************
 #*********   Convertir puntos a grado o nivel  *********
 # Este Programa convierte los valores de un puntaje
 # desde el 0 al 100 en grados del 0 al 9
@@ -29,7 +29,7 @@ def percentage_to_points(completed_exercises:int)->int:
     else:
         points=10
     return points
-#*******************************************************
+#******************** FUNCTION *************************
 #*********  Convertir puntos a grado o nivel   *********
 # Convierte las notas obtenidas en un exament en una 
 # escala de 0 a 5
@@ -48,7 +48,7 @@ def examPoints_to_grade(points:int)->int:
         grade =5
     return grade
 
-#*******************************************************
+#******************** FUNCTION *************************
 #*********  Convertir un archivo a diccionario  ********
 # Esta funcion convierte un archivo en un diccionario 
 # 1) Toma una palabra del header y obvia el encabezado
@@ -76,8 +76,52 @@ def file_to_dictionary(fle_name:str,header:str)->dict:
             file_info[parts[0]] = arg_list # Crear el diccionario de estudiantes la primera columba como Key y el resto como lista
     return file_info
 
+#******************** FUNCTION *************************
+#*********           Write DICT a FILE          ********
+#*******************************************************
+def save_dict_to_file(filename:str, dict_to_save:dict):
+    with open(filename, "w") as my_file:
+        for id, data in dict_to_save.items():
+            my_file.write(f'{id};{data[0]};{data[1]}\n')
+
+#******************** FUNCTION *************************
+#*********           Write STR a FILE           ********
+#*******************************************************
+def save_str_to_file(filename:str, string_to_save:dict):
+    with open(filename, "w") as my_file:
+        my_file.write(string_to_save)
+
+#******************** FUNCTION *************************
+#*********         Print a file content         ********
+#*******************************************************
+def read_and_print_file(filename:str):
+    with open(filename) as my_file:
+        for line in my_file:
+            line=line[:-1]
+            print(line)
+
+#******************** FUNCTION *************************
+#*********       Read courseX.txt to STR        ********
+#*******************************************************
+def read_courseX_file(filename:str)->str:
+    course_info=""
+    course_list=[]
+    with open(filename) as my_file:
+        for line in my_file:
+            parts=line.split(':')
+            course_list.append(parts[1].strip())
+    course_info=f'{course_list[0]}, {course_list[1]} credits'
+    return course_info
+
+
+
 def main():
-    #*** Solicitud de nombre de Files ***
+    #*** Clean de resoults files ***
+    open('results.csv', 'w').close()
+    open('results.txt', 'w').close()
+    results_csv={}
+    results_txt=""
+    #*** Request the data files ***
     if True:
         #Create the students info dictionary
         students_file=input("Student information: ")
@@ -90,16 +134,26 @@ def main():
         # Create the exam points dictionary
         exam_points_file=input("Exam points: ")
         exam_points_dict = file_to_dictionary(exam_points_file,"id")
+
+        # Create course information string
+        course_file=input("Course information: ")
+        course_str = read_courseX_file(course_file)
     else:
         #*** Asignacion teemporal fija para correr pruebas ***
         student_file="students1.csv"
         exercice_file="exercises1.csv"
         exam_points_file="exam_points1.csv"
+        course_file="course1.txt"
         student_dict=file_to_dictionary(student_file,"id")
         exercice_dict=file_to_dictionary(exercice_file,"id")
         exam_points_dict=file_to_dictionary(exam_points_file,"id")
+        course_str = read_courseX_file(course_file)
     # Create the report
-    print(f"name                          exec_nbr  exec_pts. exm_pts.  tot_pts.  grade")
+    results_txt=course_str + '\n'
+    results_txt=results_txt+"======================================" + '\n'
+    results_txt= results_txt+"name                          exec_nbr  exec_pts. exm_pts.  tot_pts.  grade" + '\n'
+
+    
 
     for pic, name in student_dict.items():
         if pic in exercice_dict:
@@ -109,9 +163,20 @@ def main():
             exercises_completed = int(sum(exercice_dict[pic])/40 *10) # exec_pts
             total_points= exercises_completed+exam_point #tot_pts 
             grade_points=examPoints_to_grade(exercises_completed+exam_point) # grade
-            print(f"{total_name:30}{exec_nbr:<10}{exercises_completed:<10}{exam_point:<10}{total_points:<10}{grade_points}")
+            # Built the string to safe to file results.txt
+            results_txt=results_txt+f'{total_name:30}{exec_nbr:<10}{exercises_completed:<10}{exam_point:<10}{total_points:<10}{grade_points}'+'\n'
+            #print(f"{total_name:30}{exec_nbr:<10}{exercises_completed:<10}{exam_point:<10}{total_points:<10}{grade_points}")
+            # Built the dictionary to safe to file results.csv
+            results_csv[pic]=[total_name,grade_points]
         else:
             continue
+    save_dict_to_file("results.csv",results_csv)
+    save_str_to_file("results.txt", results_txt)
+    print("Results written to files results.txt and results.csv")
+    # read_and_print_file("results.csv")
+    # read_and_print_file("results.txt")
+
+    
 
 # name                          exec_nbr  exec_pts. exm_pts.  tot_pts.  grade
 # name                                  exec_nbr  exec_pts. exm_pts.  tot_pts  grade
