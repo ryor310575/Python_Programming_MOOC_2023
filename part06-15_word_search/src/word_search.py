@@ -50,13 +50,32 @@ def wild_card_words(search_list:list,wild_card:str)-> list:
     return wild_words_list
 
 #******************** FUNCTION *************************
+#*********       look for dot wild card          ********
+#*******************************************************
+def wild_card_words_2(search_list:list,wild_card:str)-> list:
+    wild_words_list=[]
+    alphabet="abcdefghijklmnopqrstuvwxyz"
+    for word in search_list:
+        dot_position=word.find(wild_card)
+        if dot_position==-1: # Evalua que exista el termino DOT
+            wild_words_list=search_list
+            return wild_words_list
+        else:
+            for x in alphabet:
+                new_word=word.replace(wild_card,x,1)
+                wild_words_list.append(new_word)
+    wild_words_list=wild_card_words_2(wild_words_list,wild_card)
+    return wild_words_list
+
+#******************** FUNCTION *************************
 #*********       look for dot wild card         ********
 #*******************************************************
 def dot_wild(search_term:str)-> list:
     words_found=[]
     word_to_search=[]
     if "." in search_term: # Evalua que exista el termino DOT
-        word_to_search=wild_card_words([search_term],".")
+        # word_to_search=wild_card_words([search_term],".")
+        word_to_search=wild_card_words_2([search_term],".")
         with  open("words.txt") as my_file:
             for line in my_file:
                 line=line.strip()
@@ -65,6 +84,8 @@ def dot_wild(search_term:str)-> list:
     else:
         words_found[0]="no dot"
     return words_found
+
+
 #********************   MAIN   *************************
 #*********         Execute Find words           ********
 #*******************************************************
@@ -82,10 +103,9 @@ def find_words(search_term: str)->list:
     return words_found
 
 def main():
-    #print(wild_card_words(["c.r.y"],"."))
     print(find_words("car.y"))
-    print(find_words("c.r.y"))
+    print(find_words(".are"))
     print(find_words("carr*"))
     print(find_words("*arry"))
-    print(find_words("carry"))
+    print(find_words("care"))
 main()
