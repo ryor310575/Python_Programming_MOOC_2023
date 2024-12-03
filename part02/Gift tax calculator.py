@@ -71,11 +71,11 @@ elif gift >=1000000:
     tax_exceeding_part = 0.17
 
 tax_to_pay=(tax_lower_limit+(gift-lower_limit)*tax_exceeding_part)
-print(lower_limit)
-print(tax_lower_limit)
-print(tax_exceeding_part)
-print(gift-lower_limit)
-print(tax_to_pay)
+# print(lower_limit)
+# print(tax_lower_limit)
+# print(tax_exceeding_part)
+# print(gift-lower_limit)
+# print(tax_to_pay)
 
 if tax_to_pay>0:
     print(f"Amount of tax: {tax_to_pay} euros")
