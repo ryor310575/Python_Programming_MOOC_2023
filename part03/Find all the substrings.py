@@ -42,5 +42,5 @@ while True:
         break
     else:
         word_to_print=word_sliced[:3]
+        word_sliced=word_sliced[1:]
         print(word_to_print)
-        word_sliced=word_sliced[3:]
